@@ -1,0 +1,98 @@
+<?php
+$pages=Mage::registry('pages');
+$total=Mage::registry('total');
+$updated=Mage::registry('updated');
+$page=Mage::registry('page')?Mage::registry('page'):97;
+$seller= Mage::registry('seller_name');
+$category=Mage::registry('category');
+if (!isset($total)) { 
+        
+     }
+     else{
+?>
+<h4>Total Products Imported: <?php  echo $total; ?></h4>
+<h4>Total Products Updated:  <?php  echo $updated; ?></h4>
+<h4>Total No of pages:  <?php  echo $pages; ?></h4>
+
+<?php } ?>
+
+<div class="entry-edit-head content-header">
+    <h4 class="icon-head head-edit-form fieldset-legend">Import eBay Store Products</h4>
+</div>
+
+ <script language="javascript">
+     window.onload=function(){
+        <?php if($pages>=$page){ ?>
+       // document.getElementById("loading-mask").style.display="none";         
+       // alert('importing next page');
+       // document.getElementById("loading-mask").style.display="block";
+       // window.document.forms[0].submit();
+        <?php } ?>
+     };
+  </script>
+<div id="loading-mask" style="left: -2px; top: 0px; width: 1007px; height: 1485px; display: none;">
+
+    <p id="loading_mask_loader" class="loader">
+    Total items:  <?php  echo $pages; ?><br>
+    total imported:  <br>(<?php  echo $page; ?>)<br>
+    Please wait...</p>
+
+</div>
+<form class="entry-edit" method="post" action="<?php echo Mage::helper('adminhtml')->getUrl('ebay/adminhtml_ebay/import'); ?>">
+    <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" /> 
+    <div class="entry-edit-head">
+        <h4 class="icon-head head-edit-form fieldset-legend">Root category</h4>
+    </div>
+    <br />
+    <table>
+        <tr>
+            <td> <label for="category">Select Category:</label></td>
+            <td>
+                <select name="category">
+                <?php $categories=$this->cats;
+                  foreach($categories as $cat){   
+                  if($cat==$category){ ?>
+                  <option selected="selected" name="<?php echo $cat[0]; ?>" value="<?php echo $cat[1]; ?>"><?php echo $cat[2]; ?></option>    
+                  <?php } else { ?>  
+                  <option name="<?php echo $cat[0]; ?>" value="<?php echo $cat[1]; ?>"><?php echo $cat[2]; ?></option>          
+                  <?php } } ?>
+                </select>
+            </td>
+        </tr>
+        </table>
+      <br /><br> 
+   
+    <div class="entry-edit-head">
+         <h4 class="icon-head head-edit-form fieldset-legend">Import by seller id:</h4>
+    </div>    
+   <br>
+    <label for="seller">Enter SellerId:</label><input class="required-entry input-text" value="<?php if(isset($seller)) echo $seller; ?>" type="text" name="seller"  />
+    <input class="form-button" type="submit" value="import" name="import" id="import_bulk" />
+    <br />    
+    <br />
+    <br />
+    <div class="entry-edit-head">
+        <h4 class="icon-head head-edit-form fieldset-legend">Import by item id:</h4>
+    </div>
+   <br>
+    <label for="itemid">Enter item id:</label><input class="required-entry input-text" type="text" name="itemid"  /> 
+    <input type="hidden" name="page" value="<?php echo $page; ?>" />
+    <input class="form-button" type="submit" value="import" name="import_this" />
+    <br>
+    <br>
+    <br>
+    </form>
+    <form class="entry-edit" method="post" action="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);?>qty.php/">
+    
+        <div class="entry-edit-head">
+            <h4 class="icon-head head-edit-form fieldset-legend">Import Product Details:</h4>
+        </div>    
+        <br><br><br>
+        <label for="itemid">Enter Product id: &nbsp<img width="12px" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);?>media/tooltip.png" title='Enter Product Id which product to you import products detials'></label>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="text" name="product_id">
+        <button>Import Details</button>        
+    </form>    
+         
+         
+    

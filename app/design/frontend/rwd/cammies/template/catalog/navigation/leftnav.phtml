@@ -1,0 +1,47 @@
+<div class="vertical-nav-container box base-mini">
+    <h1><?php echo $this->__('Categories') ?></h1>
+
+<ul id="ma-accordion" class="accordion">
+    <?php
+        $obj = new Mage_Catalog_Block_Navigation();
+        $storeCategories = $obj->getStoreCategories();
+        Mage::registry('current_category') ? $currentCategoryId = Mage::registry('current_category')->getId() : $currentCategoryId='';
+        foreach ($storeCategories as $_category):
+    ?>
+       <?php $categoryChildren = $_category->getChildren(); ?>
+            <li <?php if( $categoryChildren->count()){?> class="parent" <?php } ?>>
+                <a href="<?php echo Mage::getModel('catalog/category')->load($_category->getId())->getUrl(); ?>"><?php echo $_category->getName(); ?></a>
+             
+                <?php if($categoryChildren->count()) : ?>
+                    <ul>
+
+                        <?php foreach($categoryChildren as $_categoryChild) : ?>
+                            <?php $_categoryChildModel = Mage::getModel('catalog/category')->load($_categoryChild->getId());?>
+                            <?php $categoryGrandchildren=$_categoryChild->getChildren(); ?>
+                            <li <?php if( $categoryGrandchildren->count() ){?> class="parent" <?php } ?>>
+                                <?php
+                                    $currentCategoryId===$_categoryChild->getId() ? $bold="style=\"font-weight:bold\"" : $bold='';
+                                    echo '&emsp;' . '<a href="' . $_categoryChildModel->getUrl() . '"' . $bold . '>' .  $_categoryChild->getName() . '(' . $_categoryChildModel->getProductCollection()->count() . ')</a>';
+                                ?>
+                            
+                            <?php if($categoryGrandchildren->count()) : ?>
+                            <ul>
+                                <?php foreach($categoryGrandchildren as $_categoryGrandchild) : ?>
+                                    <?php $_categoryGrandchildModel = Mage::getModel('catalog/category')->load($_categoryGrandchild->getId());?>
+                                    <li>
+                                        <?php
+                                            $currentCategoryId===$_categoryChild->getId() ? $bold="style=\"font-weight:bold\"" : $bold='';
+                                            echo '&emsp;&emsp;' . '<a href="' . $_categoryGrandchildModel->getUrl() . '"' . $bold . '>' .  $_categoryGrandchild->getName() . '(' . $_categoryGrandchildModel->getProductCount() . ')</a>';
+                                        ?>
+                                    </li>
+                                <?php endforeach; ?>
+                                </ul>
+                            <?php endif; ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </li>
+        <?php endforeach ?>
+</ul>
+</div>

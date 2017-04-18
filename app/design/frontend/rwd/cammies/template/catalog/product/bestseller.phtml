@@ -1,0 +1,114 @@
+<?php
+
+/**
+ * @author Branko Ajzele | http://activecodeline.com | branko.ajzele@surgeworks.com
+ * @license GPL
+ */
+ 
+/**
+*
+*
+05/06/2011 Modified by Erik Gabor | erikvail@gmail.com | http://www.mage-contacts.com
+* @license GPL
+
+*/ 
+$storeId = Mage::app()->getStore()->getId();
+
+$totalPerPage = ($this->show_total) ? $this->show_total :6;
+$counter = 1;
+$visibility = array(
+                      Mage_Catalog_Model_Product_Visibility::VISIBILITY_BOTH,
+                      Mage_Catalog_Model_Product_Visibility::VISIBILITY_IN_CATALOG
+                  );
+
+$storeId = Mage::app()->getStore()->getId();
+$_productCollection = Mage::getResourceModel('reports/product_collection')
+                              ->addAttributeToSelect('*')
+                              ->setStoreId($storeId)
+			      ->addStoreFilter($storeId)
+                              ->addOrderedQty()
+                              ->addAttributeToFilter('visibility', $visibility);
+	
+        
+        if ($current_category = Mage::registry('current_category'))
+	$_productCollection->addCategoryFilter($current_category);
+	$_productCollection->setPage(1,$totalPerPage);  
+        $_productCollection->setOrder('ordered_qty', 'desc');
+        
+        Mage::getSingleton('catalog/product_status')->addVisibleFilterToCollection($_productCollection);
+        Mage::getSingleton('catalog/product_visibility')->addVisibleInCatalogFilterToCollection($_productCollection);
+	
+        $_helper = $this->helper('catalog/output');
+
+
+//Mage_Reports_Model_Mysql4_Product_Collection
+?>
+
+<?php
+
+ $_collectionSize = $_productCollection->count(); 
+ if($current_category && $_collectionSize) : 
+?>
+<?php
+endif;
+?>
+<div class="bestselller">	
+        <h1> <?php echo $this->__('Shop Best sellers') ?></h1>
+  <?php $_collectionSize = $_productCollection->count(); ?>
+    <?php 
+          $_columnCount =6;   
+    ?>
+    <?php if($_productCollection->count()){ ?>
+   
+     		<ul>
+    <?php $i=0; foreach ($_productCollection as $_product): ?>
+        <?php if ($i++%$_columnCount==0): ?>
+       
+        <?php endif ?>
+            <li class="item<?php if(($i-1)%$_columnCount==0): ?> first<?php elseif($i%3==0): ?> last<?php endif; ?>">            
+                <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image"><img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(160); ?>" width="160" height="160" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" /></a>
+               <div class="right-section">
+                <h2 class="product-name"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>">
+          <?php $prod_name = $_helper->productAttribute($_product, $_product->getName(), 'name'); ?>
+          <?php
+                    $count_str = strlen($prod_name);
+                    if ($count_str < 38) {
+                        echo $prod_name;
+                    } else {
+                        $offset = 0;
+                        $length = 39;   
+                        $prod_name = html_entity_decode($prod_name);                     
+                        echo htmlentities(mb_substr($prod_name,0,$length,'utf-8')). "...";;                        
+                    }
+                    ?>
+          </a></h2>
+          		 <?php  $actual_price = Mage::helper('core')->currency($_product->getPrice());
+                 	   $final_price = Mage::helper('core')->currency($_product->getFinalPrice());
+					   if($actual_price == $final_price)
+					   {
+						   echo "<div class='final_price'>".$final_price."</div>";
+					   } 
+					   else
+					   { 
+					   	echo "<div class='actual_price'>".$actual_price."</div>";
+						echo "<div class='final_price'>".$final_price."</div>";
+						}
+				 
+				 ?>
+                <?php if($_product->isSaleable()): ?>
+                        <button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="button btn-cart" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')"><span><span><?php echo $this->__('Add to Cart') ?></span></span></button>
+                    <?php else: ?>
+                     <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
+                    <?php endif; ?>	
+                </div>                          
+            </li>       
+        <?php endforeach ?>
+         </ul>
+         
+         	<?php } ?>
+      
+         <?php if(!$_productCollection->count()){ ?>		 
+         <div class="note-msg"> <?php echo $this->__('There are no products matching the selection.') ?> </div>         
+		<?php } ?>
+        </div>
+       

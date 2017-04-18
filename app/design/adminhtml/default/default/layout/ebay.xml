@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <ebay_adminhtml_ebay_index>
+        <reference name="content">
+            <block type="ebay/adminhtml_ebay" name="ebay" />
+        </reference>
+    </ebay_adminhtml_ebay_index>
+</layout>
