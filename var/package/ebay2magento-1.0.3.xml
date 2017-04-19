@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<package>
+    <name>ebay2magento</name>
+    <version>1.0.3</version>
+    <stability>stable</stability>
+    <license>Open Software License</license>
+    <channel>community</channel>
+    <extends/>
+    <summary>This is ebay to magento item import extension</summary>
+    <description>Overview&#xD;
+This extension can be used for item import from ebay to magento.&#xD;
+This extension is very user-friendly form item import from ebay2magento&#xD;
+User can import all ebay products within a 2 simple steps.&#xD;
+&#xD;
+Features&#xD;
+&#xD;
+All eBay items import into your magento store by ebay category. User can import item two ways :&#xD;
+- Item import by itemID&#xD;
+- Item import by sellerID&#xD;
+Its inserts and display automatically to your magento store easily.&#xD;
+It is user friendly and easily to understand and can easily work with it.&#xD;
+&#xD;
+Installation / Configuration&#xD;
+1) Install from magentoconnect using key. After installation logout from admin panel and then after login again.&#xD;
+2) Than Goto System-&gt;Configuration-&gt;ebay Account Setting from left side you can see two text box first is &#x2018;ebay Site Global Id&#x2019; (Enter Your Site Id eg: EBAY-US, EBAY-IE,EBAY-UK) and second is &#x2018;ebay Application Name&#x2019; (Enter your ebay app id eg:example-9d17-4093-891a-31b626957 41d) and than save it.&#xD;
+3) Goto Ebay-&gt;Import items&#xD;
+4) Select the category of product you want to import.&#xD;
+5) There are two ways to import product in magento either by store Seller Id or by ebay Product Id&#xD;
+Note : Product import by Seller Id will import all products of the store.&#xD;
+Note : Product import by eBay Product Id will import only one product whose id you will input in the textbox.&#xD;
+6) Import Product either by Seller Id or by Item Id&#xD;
+7) After Successfull Import of Products from step one than Import Product Detais of imported products. This will import product Description, multiples images, quantity. </description>
+    <notes>Updated version of ebay2mganto item import</notes>
+    <authors><author><name>Iquall</name><user>admin</user><email>support@i-quall.com</email></author></authors>
+    <date>2015-05-28</date>
+    <time>11:42:45</time>
+    <contents><target name="magelocal"><dir name="Sahy"><dir name="Ebay"><dir name="Block"><dir name="Adminhtml"><file name="Ebay.php" hash="5556d4b569a0d0e6e0eb71683ddc3067"/></dir></dir><dir name="Helper"><file name="Data.php" hash="278cab2dfd938eba56d7f1ff6a9e6bfd"/><file name="Item.php" hash="a6376dc8ffeddbcb34d7fb526aa8151e"/></dir><dir name="controllers"><dir name="Adminhtml"><file name="EbayController.php" hash="5254e1f51687fe7c6a6aa413f4bfd6e7"/></dir></dir><dir name="etc"><file name="config.xml" hash="951ea7adb0d28fb9783fe471c2c951e8"/><file name="system.xml" hash="69e1527e611a4012b257b9b1dc69ca24"/></dir></dir></dir></target><target name="magedesign"><dir name="adminhtml"><dir name="default"><dir name="default"><dir name="layout"><file name="ebay.xml" hash="9885977473bc0b9caee02980bb0aabe6"/></dir><dir name="template"><dir name="ebay"><file name="ebay.phtml" hash="514171f272ddff08e9e3eb810b7b0f20"/></dir></dir></dir></dir></dir></target><target name="mageetc"><dir name="modules"><file name="Sahy_Ebay.xml" hash="cbc877d8208b92e9a805aaf7faa228be"/></dir></target><target name="magemedia"><dir name="import"><file name="2313785184390.jpg" hash="4ca4ab873f26537c04ccc676d5e38c2a"/><file name="2314564075420.jpg" hash="e504545880d29616b3f2a751fb58cca4"/><file name="2314877014770.jpg" hash="fcfef43bd549e20f772c3172f13e6618"/><file name="2314890534240.jpg" hash="52c865d72572f7b7978d4d732f033bf0"/><file name="2315128953480.jpg" hash="6c644814b1060280da38e81f155cf6a9"/><file name="2315668297120.jpg" hash="5ac12fb7ef20ba01726cda7489d0ed28"/><file name="2315739959410.jpg" hash="9ee3bf136eb387cb9bf87731a7c0d440"/><file name="3314883319600.jpg" hash="697d479bc0f7619a75d3665b22c69938"/><file name="3315328644110.jpg" hash="6c644814b1060280da38e81f155cf6a9"/><file name="3315535120970.jpg" hash="8b903c9190d2b12aef7435257750389c"/></dir><dir name="."><file name="tooltip.png" hash="61d00e8d9a768c6bad938d3f6069a2a0"/></dir></target><target name="mage"><dir name="."><file name="ebay.php" hash="4fe7da8d4d61db67fcdfa07777e3db78"/><file name="qty.php" hash="0b853caa71ddf877d1ef50e9291516a9"/></dir><dir name="ebya2magento"><file name="readme.txt" hash="802c16f8c4f9c468196ba61115739f44"/></dir></target></contents>
+    <compatible/>
+    <dependencies><required><php><min>5.1.0</min><max>6.0.0</max></php><package><name>Mage_Core_Modules</name><channel>community</channel><min>1.6.0.0</min><max>1.7</max></package></required></dependencies>
+</package>
