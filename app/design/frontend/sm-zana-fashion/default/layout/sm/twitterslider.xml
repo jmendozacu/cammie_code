@@ -1,0 +1,17 @@
+<?xml version="1.0"?>   
+<layout version="1.0">
+	<default>
+        <reference name="head">
+        	<action method="addCss"><stylesheet>sm/twitterslider/css/twitterslider.css</stylesheet></action>
+        </reference>
+    </default>
+	<twitterslider_index_index>
+		<reference name="content">
+			<block type="twitterslider/list" name="twitterslider.list.theme1">
+				<action method="setConfig">					
+				</action>
+			</block>
+		</reference>
+	</twitterslider_index_index>	
+</layout>   
+	

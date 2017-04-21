@@ -1,0 +1,186 @@
+<?php
+/*------------------------------------------------------------------------
+ # SM Tab Listing - Version 1.0
+ # Copyright (c) 2013 YouTech Company. All Rights Reserved.
+ # @license - Copyrighted Commercial Software
+ # Author: YouTech Company
+ # Websites: http://www.magentech.com
+-------------------------------------------------------------------------*/
+
+$smarthelper = Mage::helper('tablisting/utils');
+$options  = $this->getConfigObject();
+$maxtitle = $options->item_title_max_characs;
+$post     = Mage::app()->getRequest()->getPost();
+$is_ajax  = $post['is_ajax'];
+$cat_id   = $post['tab_cat_id'];
+$order_id = $params['order_id'];
+$count    = $post['ajax_tablisting_start'];
+
+if( $is_ajax ){ 
+	$type     =  $post['data_type'];
+	if( $type == 'order' ){
+		$child_items = $this->getProductsOrder($order_id);
+	} else {
+		$child_items = $this->getProducts($cat_id);
+	}
+}
+if( !empty($child_items) ) { 
+	if( $is_ajax ){
+		$k = $count;
+	} else {
+		$k = 0;
+	}
+	foreach( $child_items  as $item ){ $k++; 
+		$_product = Mage::getModel('catalog/product')->load($item->id);
+		$now = date("Y-m-d H:m:s");
+        $newsFrom= $_product->getNewsFromDate();
+        $newsTo=  $_product->getNewsToDate();
+        $specialprice = Mage::getModel('catalog/product')->load($_product->getId())->getSpecialPrice(); 
+        $special_from_date = $_product->getSpecialFromDate();
+        $special_to_date = $_product->getSpecialToDate();
+        $id_img = rand();
+	?>
+	<div id="item-wrap-<?php echo $id_img; ?>" class="item respl-item">
+		<?php   
+            if($newsFrom != ''){                            
+            if (($now>=$newsFrom && $now<=$newsTo)||($now>=$newsFrom && $newsTo =='')){  ?>
+                <div class='new-item'><?php echo "New"; ?></div>
+            <?php }
+            }else{
+            if(($newsTo != "") && $newsTo >= $now){ 
+            ?>
+                <div class='new-item'><?php echo "New"; ?></div>
+            <?php }
+            }?>
+            <?php 
+        if (($specialprice && ($special_from_date <= $now) && ($special_to_date >= $now || $special_to_date =="" ))){?>
+            <div class='sale-item'>
+                <span><?php
+                $saleof= abs(($specialprice/($_product->getPrice()))*100-100);?>
+                <?php   print_r(floor($saleof)); ?></span><?php echo $this->__("% OFF");?>
+            </div>
+        <?php } ?>
+        <div class="item-inner item-wrap">            
+			<div class="item-image">
+                <a class="product-image <?php if ($check_img >= 2) echo $this->__('rspl-image');?>" href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $item->title; ?>"> 
+                    <!--<img src="<?php //echo $item->image;?>"  alt="<?php //echo $item->title;?>" />-->
+                    <?php 
+                   $_media = Mage::getModel('catalog/product')->load($_product->getId())->getMediaGalleryImages();
+                    $count_item=0; $check_img=0;
+                    $check_img = count($_media);
+                    foreach($_media as $_img){ 
+
+                        $c = str_replace(' ', '', $_img->getLabel()); 
+                        $x = explode('_', $c);
+
+                        if ($_img->getFile() != $_product->getSmallImage()){
+                    ?>
+                       <img class="unactive" src="<?php echo $this->helper('catalog/image')->init($_product, 'image', $_img->getFile())->constrainOnly(true)->keepAspectRatio(true)->keepFrame(false)->resize(270,405); ?>" alt="<?php echo $x[0] ?>" /> 
+                   <?php  }else{ ?>
+                        <img class="active" src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(270,405); ?>" alt="<?php echo $x[0]; ?>" /> 
+
+                    <?php }
+                    }
+                   ?>
+				</a>
+                <div class="group-item">
+                    <?php if($_product->isSaleable()): ?>
+                        <a title="<?php echo $this->__('Add to cart') ?>" class="btn-cart" onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')"><?php echo $this->__('Add to Cart') ?></a>
+                        <?php else: ?>
+                            <a href="#" class="availability out-of-stock"><?php echo $this->__('Out of stock') ?></a>
+                        <?php endif; ?>
+                         <?php if($_compareUrl=$this->getAddToCompareUrl($_product)): ?>
+                            <a title="<?php echo $this->__('Add to compare') ?>" href="<?php echo $_compareUrl ?>" class="link-compare"><?php echo $this->__('Add to Compare') ?></a>
+                        <?php endif; ?>
+                        <?php if ($this->helper('wishlist')->isAllow()) : ?>
+                           <a title="<?php echo $this->__('Add to wishlist') ?>" href="<?php echo $this->helper('wishlist')->getAddUrl($_product) ?>" class="link-wishlist"><?php echo $this->__('Add to Wishlist') ?></a>
+                        <?php endif; ?>
+                       
+                </div> 
+			</div>		
+			
+		
+		<?php if( $options->item_title_display == 1 || $options->item_desc_display == 1 || $options->item_price_disp == 1 || $options->item_review_disp == 1 || $options->item_cart_disp == 1 || $options->item_wishlist_disp == 1 || $options->item_compare_disp == 1 ){?>
+			<div class="item-info">
+				<div class="item-inner"> 
+                    <div class="group-color">
+                        <ul>
+                        <?php foreach($_media as $_img){ 
+                            $c = str_replace(' ', '', $_img->getLabel()); 
+                            $x = explode('_', $c);
+                            if($x[1] !=''){
+                        ?>
+                            <li class='<?php echo $x[0]; ?><?php if ($_img->getFile() == $_product->getSmallImage()){?> selected<?php }?>' style="background:<?php echo $x[1]?>"><?php 
+                            echo $x[0]; ?></li>
+                        <?php } 
+                        }?>                                        
+                        </ul>
+                    </div>                 
+					<?php if( $options->item_title_display == 1 ){?>
+					<div class="item-title product-name">
+						<a href="<?php echo $item->link ?>" <?php echo $smarthelper->getTargetAttr($options->product_links_target);?> onclick="javascript: return true"  title="<?php echo $item->title?>" >
+							<?php echo $item->title; ?>
+						</a>
+					</div>
+					<?php }?>
+					
+                    <div class="item-content">
+                        <?php if( $options->item_review_disp == 1 ) {?> 
+                        <?php echo $this->getReviewsSummaryHtml($_product, 'short') ?>
+                        <?php }?>
+                        <?php if( $options->item_price_disp == 1 ) {    ?>
+                        <div class="wrap-price"> 
+                            <?php echo $item->price_html; // echo $this->getPriceHtml($_product, true) ?>
+                        </div>
+                        <?php }?>
+                    </div>    
+					
+				</div>		
+				<script type="text/javascript">
+                   jQuery(document).ready(function($){
+                        $('#item-wrap-<?php echo $id_img; ?> .group-color ul li').click(function(){
+                            var $cl  = $(this).attr('class');//li color
+                            var $flag = 0;
+                            var $cur_active = $('#item-wrap-<?php echo $id_img; ?> .product-image').find('.active').attr('alt');
+                            $('#item-wrap-<?php echo $id_img; ?> .group-color ul li').each(function(){
+                                $(this).removeClass('selected');
+                            })
+                            $(this).addClass('selected');
+                            $("#item-wrap-<?php echo $id_img; ?> .product-image > img").each(function(){
+                                $alt = $(this).attr('alt');
+                                if($cl == $alt){
+                                    $(this).removeClass('unactive').addClass('active');
+                                    $flag = 1;                                    
+                                }else{                                    
+                                    $(this).removeClass('active').addClass('unactive');
+                                }
+                            });                           
+                            if ($flag==0) {
+                                $("#item-wrap-<?php echo $id_img; ?> .product-image > img").each(function(){
+                                    $alt = $(this).attr('alt');
+                                    if($cur_active == $alt){
+                                        $(this).removeClass('unactive').addClass('active');
+                                    }
+                                })
+                            }
+                        });
+                   });   
+                </script>  
+				<?php if( $options->item_desc_display == 1 ) {?>
+				<div class="item-desc">
+					<?php echo $item->description; ?>
+				</div>
+				<?php }?>
+            </div>
+        <?php }?>    
+        </div>
+	</div>
+	<?php $clear = 'clr1';
+	if ($k % 2 == 0) $clear .= ' clr2';
+	if ($k % 3 == 0) $clear .= ' clr3';
+	if ($k % 4 == 0) $clear .= ' clr4';
+	if ($k % 5 == 0) $clear .= ' clr5';
+	if ($k % 6 == 0) $clear .= ' clr6';
+	?>
+	<div class="<?php echo $clear; ?>"></div>
+<?php }}?>

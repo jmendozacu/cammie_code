@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+	<config>
+		<acl>
+			<resources>
+				<admin>
+					<children>
+						<system>
+							<children>
+								<config>
+									<children>
+										<zanafashion_cfg translate="title" module="zanafashion">
+											<title>SM Zanafashion Zanafashion Section</title>
+											<sort_order>150</sort_order>
+										</zanafashion_cfg>
+									</children>
+								</config>
+							</children>
+						</system>
+					</children>
+				</admin>
+			</resources>
+		</acl>
+		<menu>
+			<zanafashion translate="title" module="zanafashion">
+				<title>SM Zana Fashion Setting</title>
+				<sort_order>100</sort_order>
+				<depends>
+					<module>Sm_Zanafashion</module>
+				</depends>
+				<children>
+					<zanafashion translate="title" module="zanafashion">
+						<title>SM Zana Fashion Setting</title>
+						<action>adminhtml/system_config/edit/section/zanafashion_cfg</action>
+						<sort_order>0</sort_order>
+					</zanafashion>										
+					<basicproducts translate="title" module="zanafashion">
+						<title>SM Basic Products</title>
+						<action>adminhtml/system_config/edit/section/basicproducts_cfg</action>
+						<sort_order>1</sort_order>
+					</basicproducts>					
+					<cartpro translate="title" module="zanafashion">
+						<title>SM Cart Pro</title>
+						<action>adminhtml/system_config/edit/section/cartpro_cfg</action>
+						<sort_order>2</sort_order>
+					</cartpro>
+					<quickview translate="title" module="zanafashion">
+						<title>SM Quickview</title>
+						<action>adminhtml/system_config/edit/section/quickview_cfg</action>
+						<sort_order>2</sort_order>
+					</quickview>
+					<sm_shopby translate="title" module="zanafashion">
+						<title>SM Shopby</title>
+						<action>adminhtml/system_config/edit/section/sm_shopby</action>
+						<sort_order>2</sort_order>
+					</sm_shopby>					
+					<megamenu translate="title">
+						<title>SM Mega Menu</title>
+						<children>
+							<menugroup translate="title" module="zanafashion">
+								<title>Menu Manager</title>
+								<action>megamenu/adminhtml_menugroup/</action>
+								<sort_order>1</sort_order>
+							</menugroup>	
+							<menuitems translate="title" module="zanafashion">
+								<title>Menu Items Manager</title>
+								<action>megamenu/adminhtml_menuitems/</action>
+								<sort_order>2</sort_order>
+							</menuitems>
+							<configurtion translate="title" module="zanafashion">
+								<title>Configuration</title>
+								<action>adminhtml/system_config/edit/section/megamenu_cfg</action>
+								<sort_order>3</sort_order>
+							</configurtion>
+						</children>
+					</megamenu>		
+					<slider translate="title" module="zanafashion">
+						<title>SM Slider</title>
+						<action>adminhtml/system_config/edit/section/slider_cfg</action>
+						<sort_order>7</sort_order>
+					</slider>
+					<deal translate="title" module="zanafashion">
+						<title>SM Deals</title>
+						<sort_order>98</sort_order>
+						<depends>
+							<module>Sm_Deal</module>
+					 	</depends>
+					 	<children>
+							<deal translate="title" module="zanafashion">
+								<title>Manage Deals</title>
+								<action>adminhtml/deal_deal</action>
+								<sort_order>0</sort_order>
+							</deal>
+							<Configuration translate="title" module="zanafashion">
+								<title>Configuration</title>
+								<action>adminhtml/system_config/edit/section/deal</action>
+								<sort_order>1</sort_order>
+							</Configuration>
+						</children>
+					</deal>		
+					<dynamicslideshow module="zanafashion">
+			            <title>Sm Dynamic SlideShow</title>
+			            <sort_order>80</sort_order>
+			            <children>
+			                <sliders translate="title" module="zanafashion">
+			                    <title>Manage Sliders</title>
+			                    <action>dynamicslideshow/adminhtml_dynamicslideshow</action>
+			                </sliders>
+			            </children>
+			        </dynamicslideshow>			
+				</children>
+			</zanafashion>
+		</menu>		
+	</config>

@@ -1,0 +1,373 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+include (dirname(dirname(__FILE__)).'/sm/yt_prepar.php');
+global $var_yttheme;
+?>
+<meta http-equiv="Content-Type" content="<?php echo $this->getContentType() ?>" />
+<meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE" />
+<title><?php echo $this->getTitle() ?></title>
+<meta name="description" content="<?php echo htmlspecialchars($this->getDescription()) ?>" />
+<meta name="keywords" content="<?php echo htmlspecialchars($this->getKeywords()) ?>" />
+<meta name="robots" content="<?php echo htmlspecialchars($this->getRobots()) ?>" />
+<?php if( $var_yttheme->getParam('device_responsive') == 1 ){?>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/>
+<?php }?>
+<link rel="icon" href="<?php echo $this->getFaviconFile(); ?>" type="image/x-icon" />
+<link rel="shortcut icon" href="<?php echo $this->getFaviconFile(); ?>" type="image/x-icon" />
+<!--[if lt IE 7]>
+<script type="text/javascript">
+//<![CDATA[
+    var BLANK_URL = '<?php echo $this->helper('core/js')->getJsUrl('blank.html') ?>';
+    var BLANK_IMG = '<?php echo $this->helper('core/js')->getJsUrl('spacer.gif') ?>';
+//]]>
+</script>
+<![endif]-->
+<?php echo $this->getCssJsHtml() ?>
+<?php echo $this->getChildHtml() ?>
+<?php echo $this->helper('core/js')->getTranslatorScript() ?>
+<?php echo $this->getIncludes() ?>
+<script type="text/javascript">
+//<![CDATA[
+	var SKIN_URL = '<?php echo $var_yttheme->skinurl();?>';
+	var TMPL_NAME = '<?php echo $var_yttheme->template;?>';
+	var TMPL_COOKIE = <?php echo json_encode($paramscookie); ?>;
+//]]>
+</script>
+<link rel="stylesheet" href="<?php echo $this->getSkinUrl('css/theme-'.$var_yttheme->getParam('theme_color').'.css') ?>" type="text/css" />
+<link rel="stylesheet" href="<?php echo $this->getSkinUrl('css/menu.css'); ?>" type="text/css" />
+<?php if( $var_yttheme->getParam('device_responsive') == 1 ){?>
+	<link rel="stylesheet" href="<?php echo $this->getSkinUrl('css/yt-responsive.css'); ?>" type="text/css" />
+<?php } ?>
+<?php if( $var_yttheme->getParam('device_responsive') == 0 ){?>
+	<link rel="stylesheet" href="<?php echo $this->getSkinUrl('css/yt-non-responsive.css'); ?>" type="text/css" />
+<?php } ?>
+<link rel="stylesheet" href="<?php echo $this->getSkinUrl('css/jquery.fancybox.css'); ?>" type="text/css" />
+<link rel="stylesheet" href="<?php echo $this->getSkinUrl('css/jquery.fancybox-buttons.css'); ?>" type="text/css" />
+<link rel="stylesheet" href="<?php echo $this->getSkinUrl('css/cloudzoom.css'); ?>" type="text/css" />
+<link rel="stylesheet" href="<?php echo $this->getSkinUrl('css/owl.animate.css'); ?>" type="text/css" />
+<link rel="stylesheet" href="<?php echo $this->getSkinUrl('css/owl.theme.default.css'); ?>" type="text/css" />
+<link rel="stylesheet" href="<?php echo $this->getSkinUrl('css/owl.carousel.css'); ?>" type="text/css" />
+<?php if( $var_yttheme->getParam('showCpanel') ) { ?>
+	<link rel="stylesheet" href="<?php echo $this->getSkinUrl('css/new_cpanel.css'); ?>" type="text/css" />
+	<link rel="stylesheet" href="<?php echo $this->getSkinUrl('css/minicolors/jquery.miniColors.css'); ?>" type="text/css" />
+<?php } ?>
+<?php 
+$rich_snippet     = Mage::getStoreConfig('zanafashion_cfg/rich_snippets_setting/use_rich_snippet');
+$google_plus_href = Mage::getStoreConfig('zanafashion_cfg/rich_snippets_setting/google_plus_href');
+if ( $rich_snippet == 1 && $google_plus_href !="" ){?>
+<link rel="author" href="<?php echo $google_plus_href;?>" />
+<?php }?>
+<?php 
+if( isset($_SERVER['HTTPS'] )  && $_SERVER['HTTPS'] != 'off' ) {
+    $http = 'https';
+} else {
+    $http = 'http';
+}
+$googleWebFont = $var_yttheme->getParam('googleWebFont');
+$googleWebFontTargets = $var_yttheme->getParam('googleWebFontTargets');
+if ( $googleWebFont != "" && $googleWebFont != "" ) {
+	$googleWebFontFamily = str_replace(" ","+",$googleWebFont);
+	$googleWebFontFamily = strpos($googleWebFontFamily, ':')?substr($googleWebFontFamily, 0, strpos($googleWebFontFamily, ':')):$googleWebFontFamily;
+?>
+
+<link rel="stylesheet" type="text/css" href="<?php echo $http;?>://fonts.googleapis.com/css?family=<?php echo $googleWebFontFamily; ?>" media="all" />
+<?php }
+?>
+<style type="text/css">
+<?php
+// Body Font size
+echo 'body{	
+		font-size:'.$var_yttheme->getParam('fontsize').';	
+	}';	
+if( trim($var_yttheme->getParam('font_name'))!='' )
+	echo '
+		body{
+			font-family:'.$var_yttheme->getParam('font_name').';	
+		}';
+if( trim($googleWebFontTargets)!="" )
+	echo $googleWebFontTargets.'{
+			font-family:'.$googleWebFont.', serif !important;
+			font-weight: 700 !important;
+		}';
+	echo '
+		body.'.$var_yttheme->template.'{	
+			color:#'.$var_yttheme->getParam('textcolor').' ;			
+		}
+		body.'.$var_yttheme->template.'{	
+			background-color:#'.$var_yttheme->getParam('bgcolor').' ;
+		}
+		a{	
+			color:#'.$var_yttheme->getParam('linkcolor').' ;	
+		}
+		a:focus,
+		a:hover{	
+			color:#'.$var_yttheme->getParam('linkcolorhover').' ;	
+		}
+		#yt_wrapper .page-title:before{
+			background-color:#'.$var_yttheme->getParam('textcolor').' ;
+		}		
+		';
+if ( $var_yttheme->getParam('usebgimage') == 1 && $var_yttheme->getParam('usecustomizeimage') == 1 && $var_yttheme->getParam('bgcustomizeimage') !="" ){
+	$media_base = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);
+	echo '
+		body.'.$var_yttheme->template.'{	
+			background-attachment: fixed;
+			background-image: url('.$media_base.'pattern/'.$var_yttheme->getParam('bgcustomizeimage').');
+			background-repeat:'.$var_yttheme->getParam('bgimagerepeat').' ;	
+			background-position:'.$var_yttheme->getParam('bgimageposition').' ;				
+		}		
+		';
+}		
+if ( $var_yttheme->getParam('usebgimage') == 1 ){
+	echo '
+		.pattern1,
+		.pattern2,
+		.pattern3,
+		.pattern4,
+		.pattern5,
+		.pattern6,
+		.pattern7,
+		.pattern8{	
+			background-repeat:'.$var_yttheme->getParam('bgimagerepeat').' ;	
+			background-position:'.$var_yttheme->getParam('bgimageposition').' ;			
+		}		
+		';
+}
+//detail config
+if ( $var_yttheme->getParam('show_imagezoom') == 0 ){
+	echo '
+		.cloud-zoom-big {
+			display: none !important;
+		}
+		.cloud-zoom-lens {
+			cursor: pointer;	
+		}
+		';	
+}
+if ( $var_yttheme->getParam('zoom_mode') == 2 ){
+	echo '
+		.cloud-zoom-lens{	
+			border: 1px solid #ccc;
+			background: #fff;			
+		}
+		.cloud-zoom-big {
+			overflow: hidden;
+			border: 2px solid #ccc;
+			top: 0 !important;
+		}		
+		';	
+}else{
+	echo '
+		.cloud-zoom-big {
+			top: 0 !important;
+			left: 0 !important;
+			width: 100% !important;
+			height: 100% !important;
+		}
+		';	
+}
+//Advanved config
+if ( $var_yttheme->getParam('show_addtocart') == 0 ){
+	echo '
+		.btn-cart,
+		.item-addcart,
+		.product-addcart,
+		.header-cart,
+		.wrap-qty,
+		.add-to-cart{
+			display: none;
+		}
+		';
+}
+if ( $var_yttheme->getParam('show_wishlist') == 0 ){
+	echo '
+		.link-wishlist,
+		.item-wishlist,
+		.product-wishlist,
+		.add-to-links .wishlist{
+			display: none;
+		}
+		';
+}
+if ( $var_yttheme->getParam('show_compare') == 0 ){
+	echo '
+		.link-compare,
+		.item-compare,
+		.product-compare,
+		.add-to-links .compare{
+			display: none;
+		}
+		';
+}
+if ( $var_yttheme->getParam('custom_css') != '' ){
+	echo $var_yttheme->getParam('custom_css');
+}
+?>
+</style>
+
+<?php if ( null == Mage::registry('jsmart.jquery') ){
+	// if module allowed jquery.
+	Mage::register('jsmart.jquery', 1); ?>
+	<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery-1.11.1.min.js') ?>"></script>
+	<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery.noconflict.js') ?>"></script>
+	
+<?php } ?>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery.uniform.min.js') ?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery.jqtransform.js') ?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('bootstrap/js/bootstrap.min.js') ?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/cloud-zoom.1.0.2.js') ?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jcarousellite_1.0.1.js') ?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery.easing.js') ?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/yt-script.js') ?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/yt-extend.js') ?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery.cookie.min.js') ?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery.accordion_snyderplace.js') ?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/respond.src.js') ?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery.fancybox.js') ?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/fancybox-buttons.js') ?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/owl.carousel.js') ?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/jquery.session.js') ?>"></script>
+<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/slider-ru.js') ?>"></script>
+<?php if( $var_yttheme->getParam('showCpanel') ) { ?>
+	<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/ytcpanel.js') ?>"></script>
+	<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/minicolors/jquery.miniColors.min.js') ?>"></script>
+<?php } ?>
+<script type="text/javascript">
+//<![CDATA[
+	jQuery(function($){ 
+	//style for select option, radio...
+	$(".quick-info .chk-remember input[type='checkbox']").uniform(); 
+	$("#narrow-by-list input[type='checkbox']").uniform();
+	if(navigator.userAgent.indexOf("Firefox")!=-1){
+        $("#product-options-wrapper select").uniform();
+         //$("#product-options-wrapper input[type='checkbox']").uniform();
+    }
+    else if(navigator.userAgent.indexOf("Opera")!=-1){
+        $("#product-options-wrapper select").uniform();
+        //$("#product-options-wrapper input[type='checkbox']").uniform();
+    }
+    else if(navigator.userAgent.indexOf("Chrome") != -1){
+        $("#product-options-wrapper select").uniform();
+        //$("#product-options-wrapper input[type='checkbox']").uniform();
+    }
+    else if(navigator.userAgent.indexOf("Safari")!=-1){
+       $("#product-options-wrapper select").uniform();
+       //$("#product-options-wrapper input[type='checkbox']").uniform();
+    }
+	
+	});
+//]]>
+</script>
+<script type="text/javascript">
+	var uA = navigator.userAgent;
+	if(uA.indexOf('Trident') != -1 && uA.indexOf('rv:11') != -1){	  
+		document.write('<link rel="stylesheet" href="<?php echo $this->getSkinUrl('css/ie11.css'); ?>" type="text/css" />');
+	}
+	if(navigator.userAgent.indexOf("MSIE")!=-1){
+		var Browser = {
+			IsIe: function () {
+				return navigator.appVersion.indexOf("MSIE") != -1;
+			},
+			Navigator: navigator.appVersion,
+			Version: function() {
+				var version = 999; // we assume a sane browser
+				if (navigator.appVersion.indexOf("MSIE") != -1)
+					// bah, IE again, lets downgrade version number
+					version = parseFloat(navigator.appVersion.split("MSIE")[1]);
+				return version;
+			}
+		};
+
+		if (Browser.IsIe && Browser.Version() >= 9) {
+			document.write('<link rel="stylesheet" href="<?php echo $this->getSkinUrl('css/ie.css'); ?>" type="text/css" />');
+		}else{
+			document.write('<link rel="stylesheet" href="<?php echo $this->getSkinUrl('css/ie8.css'); ?>" type="text/css" />');
+		}
+    }
+    else if(navigator.userAgent.indexOf("Firefox")!=-1){
+        name = "Firefox";
+    }
+    else if(navigator.userAgent.indexOf("Opera")!=-1){
+        name = "Opera";
+    }
+    else if(navigator.userAgent.indexOf("Chrome") != -1){
+        document.write('<link rel="stylesheet" href="<?php echo $this->getSkinUrl('css/chrome.css'); ?>" type="text/css" />');
+    }
+    else if(navigator.userAgent.indexOf("Safari")!=-1){
+        document.write('<link rel="stylesheet" href="<?php echo $this->getSkinUrl('css/safari.css'); ?>" type="text/css" />');
+    }
+</script>
+<script type="text/javascript">
+//<![CDATA[
+	jQuery(function($) {
+		//change select,option -> ul,li	
+		//$("select").jqTransform();		
+		//$(".wrap-sb").jqTransform();
+		//$(".wrap-show").jqTransform();
+		//$(".block-currency").jqTransform();
+		/*$(".block-language").jqTransform();	
+		$(".block-language .jqTransformSelectWrapper").each(function(){
+			arr_bg = new Array();
+			arr_tit = new Array(); i=0;
+			$(this).find('select option').each(function(){
+				arr_bg[i] = $(this).css('background-image'); 
+				arr_tit[i] = $(this).attr('title');
+				i++;
+			})
+			j=0;
+			$(this).find('ul li').each(function(){
+				if(arr_bg[j]!="none"){
+					$(this).find('a').css('background-image', arr_bg[j]);
+				}
+				$(this).find('a').attr('title', arr_tit[j]);
+				j++;
+			});
+		});
+		$('.block-language .jqTransformSelectWrapper ul li a.selected,.block-language .jqTransformSelectWrapper div span').css('background-image', $('#select-language option[selected="selected"]').css('background-image'));
+		$('.block-language .jqTransformSelectWrapper div span').attr('title', $('#select-language option[selected="selected"]').attr('title'));*/
+
+	});
+//]]>	
+
+</script>
+<script language="javascript">
+	jQuery(window).load(function() {
+	    jQuery(".preload").fadeOut(1000);
+	});
+	jQuery(document).ready(function($){
+		$('#yt_sidenav > li > a > span').each(
+			function( index ) {
+				str = $( this ).text().toLowerCase();
+				if(str === 'about us' || str ==="contact us" || str=="blog"){
+					$( this ).parent().parent().remove();
+				}
+				
+			}
+		);
+
+	});
+	
+</script>

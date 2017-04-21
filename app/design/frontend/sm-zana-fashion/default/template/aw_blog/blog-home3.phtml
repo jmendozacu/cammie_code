@@ -1,0 +1,86 @@
+<?php
+/**
+ * aheadWorks Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://ecommerce.aheadworks.com/AW-LICENSE.txt
+ *
+ * =================================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * =================================================================
+ * This package designed for Magento community edition
+ * aheadWorks does not guarantee correct work of this extension
+ * on any other Magento edition except Magento community edition.
+ * aheadWorks does not provide extension support in case of
+ * incorrect edition usage.
+ * =================================================================
+ *
+ * @category   AW
+ * @package    AW_Blog
+ * @version    1.2.1
+ * @copyright  Copyright (c) 2010-2012 aheadWorks Co. (http://www.aheadworks.com)
+ * @license    http://ecommerce.aheadworks.com/AW-LICENSE.txt
+ */
+?> 
+<?php $posts = $this->getPosts(); ?>
+<?php include_once 'helper.php'; ?>
+<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 p-left">
+<div id="messages_product_view">
+    <?php Mage::app()->getLayout()->getMessagesBlock()->setMessages(Mage::getSingleton('customer/session')->getMessages(true)); ?> 
+    <?php echo Mage::app()->getLayout()->getMessagesBlock()->getGroupedHtml(); ?> 
+</div>
+
+ <div class="blog-title">
+ 	<h2><?php echo $this->__('From blog'); ?></h2>
+ 	<a href="<?php echo Mage::helper('core/url')->getCurrentUrl().'blog.html'; ?>"><?php echo $this->__('View all'); ?></a>
+ </div>
+<ol id="blog-list" class="products-list">	
+<?php $i=0;
+ foreach ($posts as $post): 
+ 	$i++;
+ 	if ($i <= 2) {
+?>
+    <li class="postWrapper item <?php if($i==1){ echo "first-item"; }else{ echo "last-item"; } ?>">
+		<div class="item-inner">
+			<div class="product-info">
+				<a href="<?php echo $post->getAddress(); ?>" title="<?php echo $post->getTitle(); ?>">
+					<?php                   
+	                $short_content = strip_tags($post->getShortContent());
+	                $images = ImageHelper::getInlineImages($post->getShortContent());
+	                ?>
+	                <?php if(!empty($images)){ ?>
+	                <?php echo $images[0]; ?>    
+	                <?php } ?> 
+            	</a>
+				<div class="product-name">
+					<h2><a class="title-blog-name" href="<?php echo $post->getAddress(); ?>" ><?php echo $post->getTitle(); ?></a></h2>
+				</div>
+				<div class="info-cat-blog">
+					<span><?php 
+					date_default_timezone_set("America/Los_Angeles");
+					print_r(date("Y-m-d H:i:s",strtotime($post->getCreatedTime())));
+					//echo "<br>";
+					//print_r(date("l, F j, Y H:i:s A",strtotime($post->getCreatedTime())));
+					//echo '<br>'.$post->getCreatedTime();?>
+					</span>
+				</div>					
+				<div class="postContent">
+					<?php 					
+					$str = strip_tags($post->getPostContent()); 
+					echo substr($str,0,200).'...';
+					?>
+				</div>
+				<p class="link-rm"><a href="<?php echo $post->getAddress(); ?>"><?php echo $this->__('Read more');?></a>	
+			</div>
+		</div>
+    </li>
+<?php 
+}
+endforeach; ?>
+</ol> 
+</div>
+

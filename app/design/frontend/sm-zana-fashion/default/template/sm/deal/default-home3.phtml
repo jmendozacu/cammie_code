@@ -1,0 +1,281 @@
+<?php
+/*------------------------------------------------------------------------
+ # SM Deal - Version 1.0
+ # Copyright (c) 2014 YouTech Company. All Rights Reserved.
+ # @license - Copyrighted Commercial Software
+ # Author: YouTech Company
+ # Websites: http://www.magentech.com
+-------------------------------------------------------------------------*/?>
+<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 p-right">		
+<script type="text/javascript">
+//<![CDATA[
+data = new Date(2013,10,26,12,00,00);
+var listdeal = [];
+function CountDown(date,id){
+	dateNow = new Date();
+	amount = date.getTime() - dateNow.getTime();
+	delete dateNow;
+	if(amount < 0){
+		document.getElementById(id).innerHTML="Now!";
+	} else{
+		days=0;hours=0;mins=0;secs=0;out="";
+		amount = Math.floor(amount/1000);
+		days=Math.floor(amount/86400);
+		amount=amount%86400;
+		hours=Math.floor(amount/3600);
+		amount=amount%3600;
+		mins=Math.floor(amount/60);
+		amount=amount%60;
+		secs=Math.floor(amount);
+		//if(days != 0){}
+		out += "<div><span class='title'>"+days+"</span><span>"+((days==1)?"day":"days")+"</span></div>" 
+		+ "<div><span class='title'>"+hours+"</span><span>"+((hours==1)?"hour":"hours")+"</span></div>"
+		+"<div><span class='title'>"+mins+"</span><span>"+((mins==1)?"min":"mins")+"</span></div>"
+		+"<div><span class='title'>"+secs+"</span><span>"+((secs==1)?"sec":"secs")+"</span></div>"; 
+		out = out.substr(0,out.length-2);
+		document.getElementById(id).innerHTML=out;
+		setTimeout(function(){CountDown(date,id)}, 1000);
+	}
+}
+//]]>
+</script>
+<?php
+$dayDate  = Mage::app()->getLocale()->date()->toString(Varien_Date::DATETIME_INTERNAL_FORMAT);
+$deals  = Mage::getResourceModel('deal/deal_product_collection')->joinFields()->joinFieldsdeal()
+				->addFilter('status', '1', "=")
+				->addFilter('end_date', $dayDate, ">");
+
+if(Mage::getStoreConfig('deal/deal/orderby') == 1){
+	$deals->OrderbyAdd('start_date','desc');
+}else{
+	$deals->OrderbyAdd('end_date','desc');
+}
+		
+$productBlock=$this->getLayout()->createBlock("catalog/product_list");
+$check_array =$deals->getData();
+
+/*get config backend*/
+$general_setting = Mage::getStoreConfig('deal/deal');
+$product_setting = Mage::getStoreConfig('deal/product_display_setting');
+?>
+<?php if( !empty($check_array) && $general_setting['isenabled'] == 1 ){
+	$uniqued ='sm_deal_'.rand().time();
+?>
+<?php 
+$total = count($deals->getData()); 
+$t=ceil($total/2);
+?>
+<div id="<?php echo $uniqued;?>" class="sm-deal-wrap products-grid ">	
+	<div class="block-title">		
+		<p class="title-deals"><span><?php echo $this->__('Deals of the day'); ?></span></p>		
+	</div>
+
+	<div class="sm-deal-inner m-lr">
+		<div class="deal-list-item">
+			
+<div id="carousel-example-generic" class="carousel slide" data-ride="carousel" data-interval="0">	
+	<div class="box-tmp">
+		<a class="prev carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+			prev
+		</a>
+		<a class="next carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+			next
+		</a>
+	</div>
+	<div class="carousel-inner">
+			<?php $j = 0; foreach($deals->getData() as $product_data){ 
+			$_product = Mage::getModel('catalog/product')->load($product_data['entity_id']);
+			$now = date("Y-m-d H:m:s");
+	        $newsFrom= $_product->getNewsFromDate();
+	        $newsTo=  $_product->getNewsToDate();
+	        $specialprice = Mage::getModel('catalog/product')->load($_product->getId())->getSpecialPrice(); 
+	        $special_from_date = $_product->getSpecialFromDate();
+	        $special_to_date = $_product->getSpecialToDate();	
+	         $id_img = rand();
+			?>
+			<?php if($j%2 == 0){ ?>
+			<div class="item <?php if($j==0){ echo 'active'; } ?>">
+			<?php }?>
+			<div class="inner-item">
+				 <?php   
+                if($newsFrom != ''){                            
+                if (($now>=$newsFrom && $now<=$newsTo)||($now>=$newsFrom && $newsTo =='')){  ?>
+                    <div class='new-item'><?php echo "New"; ?></div>
+                <?php }
+                }else{
+                if(($newsTo != "") && $newsTo >= $now){ 
+                ?>
+                    <div class='new-item'><?php echo "New"; ?></div>
+                <?php }
+                }?>
+                <?php 
+                if (($specialprice && ($special_from_date <= $now) && ($special_to_date >= $now || $special_to_date =="" ))){?>
+                    <div class='sale-item'>
+                        <span><?php
+                        $saleof= abs(($specialprice/($_product->getPrice()))*100-100);?>
+                        <?php   print_r(floor($saleof)); ?></span><?php echo $this->__("% OFF");?>
+                    </div>
+                <?php } ?>  
+				<div id="item-wrap-<?php echo $id_img; ?>" class="item-wrap item-deal  <?php if($j%4 == 0) { echo 'first'; }?>">
+						<div class="item-image">
+							<a class="product-image"  href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->htmlEscape($this->getImageLabel($_product, 'small_image')) ?>">
+							<?php 
+	                           $_media = Mage::getModel('catalog/product')->load($_product->getId())->getMediaGalleryImages();
+	                            $count_item=0; $check_img=0;
+	                            $check_img = count($_media);
+	                            $string = $this->getAddToCartUrl($_product);
+	                            foreach($_media as $_img){ 
+
+	                                $c = str_replace(' ', '', $_img->getLabel()); 
+	                                $x = explode('_', $c);
+
+	                                if ($_img->getFile() != $_product->getSmallImage()){
+	                            ?>
+	                               <img class="unactive" src="<?php echo $this->helper('catalog/image')->init($_product, 'image', $_img->getFile())->constrainOnly(true)->keepAspectRatio(true)->keepFrame(false)->resize(270,405); ?>" alt="<?php echo $x[0] ?>" /> 
+	                           <?php  }else{ ?>
+	                             <img class="active" src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(270,405); ?>" alt="<?php echo $x[0]; ?>" /> 
+
+	                            <?php }
+	                            }
+                           	?>
+							</a>	
+							<div id="product_time_<?php echo $j;?>" class="product_time"></div>	
+							<script type="text/javascript">
+							//<![CDATA[
+								listdeal.push('product_time_<?php echo $j."&&||&&".date("Y/m/d", strtotime($product_data['end_date']));?>') ;
+							//]]>
+							</script>
+                            <div class="group-item">
+                                <?php if($_product->isSaleable()): ?>
+                                <a title="<?php echo $this->__('Add to cart') ?>" class="btn-cart" onclick="setLocation('<?php echo Mage::helper('checkout/cart')->getAddUrl($_product) ?>')"><?php echo $this->__('Add to Cart') ?></a>
+                                <?php else: ?>
+                                    <a href="#" class="availability out-of-stock"><?php echo $this->__('Out of stock') ?></a>
+                                <?php endif; ?>
+                                 <?php if( $_compareUrl= $productBlock->getAddToCompareUrl($_product) ): ?>
+                                    <a title="<?php echo $this->__('Add to compare') ?>" href="<?php echo $_compareUrl ?>" class="link-compare"><?php echo $this->__('Add to Compare') ?></a>
+                                <?php endif; ?>
+                                <?php if ($this->helper('wishlist')->isAllow()) : ?>
+                                   <a title="<?php echo $this->__('Add to wishlist') ?>" href="<?php echo $this->helper('wishlist')->getAddUrl($_product) ?>" class="link-wishlist"><?php echo $this->__('Add to Wishlist') ?></a>
+                                <?php endif; ?>
+                            </div> 						
+						</div>
+						<div class="item-info">
+							<div class="item-inner">
+								<div class="group-color">
+                                    <ul>
+                                    <?php foreach($_media as $_img){ 
+                                        $c = str_replace(' ', '', $_img->getLabel()); 
+                                        $x = explode('_', $c);
+                                        if($x[1] !=''){                                        	
+                                    ?>
+                                        <li class='<?php echo $x[0]; ?><?php if ($_img->getFile() == $_product->getSmallImage()){?> selected<?php }?>' style="background:<?php echo $x[1]?>"><?php 
+                                        echo $x[0]; ?></li>
+                                    <?php }                                     	
+                                    }?>                                        
+                                    </ul>
+                                </div>
+                                <?php if( $product_setting['product_title_disp'] == 1 ){?>
+                                <div class="item-title product-name">                                	
+                                	<a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->htmlEscape($_product->getName()) ?>"><?php echo substr($this->htmlEscape($_product->getName()), 0, $product_setting['product_title_max_characters']);	
+									?>
+									</a>
+                                </div>
+                                <?php }?>
+							
+							<div class="item-content">
+								<?php if( $product_setting['product_reviews_count'] == 1 ){?>
+								
+									<?php  echo $productBlock->getReviewsSummaryHtml($_product, 'short'); ?>
+								
+								<?php }?>
+								<?php if( $product_setting['product_price_disp'] == 1 ){?>
+								
+								<?php if($_product->isSaleable()){?>
+								<div class="wrap-price"> 
+									<?php echo $productBlock->getPriceHtml($_product, true); ?>
+								</div>	
+								<?php } ?>
+								
+								<?php }?>
+								<?php if( $product_setting['product_description_disp'] == 1 ){?>
+								<div class="item-des">
+									<?php echo substr($_product->getshort_description(), 0, $product_setting['product_description_max_characters']);?>
+								</div>
+								<?php }?>
+								</div>
+							</div>		
+							<script type="text/javascript">
+			                   jQuery(document).ready(function($){
+			                        $('#item-wrap-<?php echo $id_img; ?> .group-color ul li').click(function(){
+			                            var $cl  = $(this).attr('class');//li color
+			                            var $flag = 0;
+			                            var $cur_active = $('#item-wrap-<?php echo $id_img; ?> .product-image').find('.active').attr('alt');
+			                            $('#item-wrap-<?php echo $id_img; ?> .group-color ul li').each(function(){
+			                                $(this).removeClass('selected');
+			                            })
+			                            $(this).addClass('selected');
+			                            $("#item-wrap-<?php echo $id_img; ?> .product-image > img").each(function(){
+			                                $alt = $(this).attr('alt');
+			                                if($cl == $alt){
+			                                    $(this).removeClass('unactive').addClass('active');
+			                                    $flag = 1;                                    
+			                                }else{                                    
+			                                    $(this).removeClass('active').addClass('unactive');
+			                                }
+			                            });                           
+			                            if ($flag==0) {
+			                                $("#item-wrap-<?php echo $id_img; ?> .product-image > img").each(function(){
+			                                    $alt = $(this).attr('alt');
+			                                    if($cur_active == $alt){
+			                                        $(this).removeClass('unactive').addClass('active');
+			                                    }
+			                                })
+			                            }
+			                        });
+			                   });   
+			                </script> 							
+						</div>
+						
+				</div> <!-- end item-deal -->
+		</div><!-- end inner item-->
+		<?php if($j%2 == 1){?>
+		</div><!-- end item -->		
+		<?php } ?>
+		<?php if($total==$j && $j%2 != 1){?>
+			</div>
+		<?php }?>
+		<?php $j++; }?>	
+		
+	
+	</div><!-- end carousel-inner -->
+	
+	
+	<!--<ul class="btn-p-n">
+        <li title="Previous">
+            <a class="prev carousel-control" href="#carousel-example-generic" data-slide="prev"></a>
+        </li>
+        <li title="Next">
+            <a class="next carousel-control" href="#carousel-example-generic" data-slide="next"></a>
+        </li>
+    </ul>-->
+</div><!-- end carousel-example-generic -->
+
+		</div>				
+	</div>
+</div>
+<script type="text/javascript">
+//<![CDATA[
+window.onload=function(){
+	if(listdeal.length > 0){
+		for(i=0;i<listdeal.length;i++)
+		{
+			var arr = listdeal[i].split("&&||&&"); 
+			var data = new Date(arr[1]);
+			CountDown(data, arr[0]);
+		}	
+	}
+};
+//]]>
+</script>	
+<?php } ?>
+</div>
