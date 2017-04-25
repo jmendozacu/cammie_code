@@ -36,7 +36,7 @@ class Sm_Megamenu_Block_Adminhtml_Menuitems_Grid extends Mage_Adminhtml_Block_Wi
 		// }
 		$collection ->getSelect()
 				->join(array('parent' => $collection->getTable('menuitems') ),'',array())
-				->columns('CONCAT( REPEAT( "'.Sm_Megamenu_Model_System_Config_Source_Prefix::PREFIX.'   ", (COUNT(parent.depth) - 1) ) , main_table.title) AS name')
+				->columns(new Zend_Db_Expr('CONCAT( REPEAT( "'.Sm_Megamenu_Model_System_Config_Source_Prefix::PREFIX.'   ", (COUNT(parent.depth) - 1) ) , main_table.title) AS name'))
 				->where('main_table.lft BETWEEN parent.lft AND parent.rgt')
 				// ->where('main_table.group_id ="'.$params['group'].'"')
 				->where('parent.group_id = main_table.group_id')
