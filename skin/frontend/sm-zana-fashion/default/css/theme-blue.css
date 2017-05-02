@@ -2391,6 +2391,7 @@ tr.summary-details-excluded {
   line-height: 56px;
   color: #fff;
 }
+#yt_header .header-2 .yt-menu-container-home .yt-menu-nav #nav > li.active > a > span,
 #yt_header .header-2 .yt-menu-container .yt-menu-nav #nav > li.active > a > span {
   color: #686868;
 }
@@ -2743,11 +2744,11 @@ tr.summary-details-excluded {
   cursor: pointer;
 }
 #yt_header .header-2 .ge-header-middle .wrap-ssc {
-  padding: 28px 0;
+  padding: 10px 0;
 }
 #yt_header .header-2 .ge-header-middle .wrap-ssc .box-right {
   float: right;
-  margin-top: 78px;
+  margin-top: 42px;
 }
 #yt_header .header-2 .ge-header-middle .wrap-ssc .box-right .block-minicartpro .title-block {
   line-height: 42px;
@@ -13145,4 +13146,22 @@ tr.summary-details-excluded {
 #nav > li.active > a,
 #nav ul li:hover > a {
   color: #4ca8ca !important;
+}
+
+.sm-cartpro span.quantity-controls {
+    width: 70px;
+    margin-left: 5px!important;
+}
+
+.sm-cartpro span.quantity-controls input.quantity-controls.quantity-plus {
+    min-width: 27px;
+}
+.sm-cartpro span.quantity-controls input.quantity-controls.quantity-minus {
+    min-width: 27px;
+}
+
+@media screen and (max-width: 600px) {
+.col-left .block-basic.category-products, .wrap-services-parent {
+    display: none;
+  }
 }

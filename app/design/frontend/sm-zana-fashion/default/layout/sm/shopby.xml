@@ -33,6 +33,13 @@
             </action>
         </reference>
     </catalog_category_layered>
+    <catalog_category_default>
+        <reference name="product_list">
+            <action method="setTemplate">
+                <template>sm/shopby/catalog/product/list.phtml</template>
+            </action>
+        </reference>
+    </catalog_category_default>
     
     <catalog_category_layered_ajax_layer>
         <remove name="right"/>
